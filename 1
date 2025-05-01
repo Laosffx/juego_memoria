@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de Memoria</title>
+  <style>
+    button {
+      font-size: 24px;
+      width: 60px;
+      height: 60px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Juego de Memoria</h2>
+  <p>Emparejá las cartas iguales. El juego mide el tiempo e intentos.</p>
+  <button onclick="iniciarJuego()">Iniciar juego</button>
+  <div id="tablero" style="margin-top: 20px;"></div>
+  <p id="mensajeFinal"></p>
+
+  <script>
+    let cartas = ['🐶', '🐱', '🐶', '🐱'];
+    let seleccionadas = [];
+    let emparejadas = 0;
+    let intentos = 0;
+    let tiempoInicio;
+    let tiempoFinal;
+
+    function barajar(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function iniciarJuego() {
+      const tablero = document.getElementById('tablero');
+      tablero.innerHTML = '';
+      seleccionadas = [];
+      emparejadas = 0;
+      intentos = 0;
+      tiempoInicio = new Date().getTime();
+      const cartasBarajadas = barajar(cartas.slice());
+
+      cartasBarajadas.forEach((emoji) => {
+        const btn = document.createElement('button');
+        btn.textContent = '?';
+        btn.dataset.emoji = emoji;
+        btn.onclick = () => manejarClick(btn);
+        tablero.appendChild(btn);
+      });
+    }
+
+    function manejarClick(btn) {
+      if (btn.textContent !== '?') return;
+
+      btn.textContent = btn.dataset.emoji;
+      seleccionadas.push(btn);
+
+      if (seleccionadas.length === 2) {
+        intentos++;
+        const [b1, b2] = seleccionadas;
+        if (b1.dataset.emoji === b2.dataset.emoji) {
+          emparejadas++;
+          seleccionadas = [];
+          if (emparejadas === cartas.length / 2) {
+            tiempoFinal = new Date().getTime();
+            const tiempoTotal = tiempoFinal - tiempoInicio;
+            document.getElementById('mensajeFinal').textContent =
+              `✅ ¡Juego completo! Tiempo: ${tiempoTotal}ms - Intentos: ${intentos}`;
+
+            // Redirigir a Qualtrics con los datos
+            const urlQualtrics = 'https://tu-enlace.qualtrics.com/jfe/form/XXXXXXXXXX'; // ← CAMBIALO
+            window.location.href = `${urlQualtrics}?tiempo=${tiempoTotal}&intentos=${intentos}`;
+          }
+        } else {
+          setTimeout(() => {
+            b1.textContent = '?';
+            b2.textContent = '?';
+            seleccionadas = [];
+          }, 1000);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
