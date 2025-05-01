@@ -68,8 +68,9 @@
               `✅ ¡Juego completo! Tiempo: ${tiempoTotal}ms - Intentos: ${intentos}`;
 
             // Redirigir a Qualtrics con los datos
-            const urlQualtrics = 'https://openuil.az1.qualtrics.com/jfe/form/SV_6D4pc7oUmSGfERE';
-            window.location.href = `${urlQualtrics}?tiempo=${tiempoTotal}&intentos=${intentos}`;
+const urlQualtricsEnd = 'https://openuil.az1.qualtrics.com/jfe/form/SV_6D4pc7oUmSGfERE?Q_JFE=qdg';
+window.location.href = `${urlQualtricsEnd}&tiempo=${tiempoTotal}&intentos=${intentos}`;
+
           }
         } else {
           setTimeout(() => {
